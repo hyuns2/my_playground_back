@@ -1,0 +1,10 @@
+spring:
+  application:
+    name:
+      playground
+
+  profiles:
+    active: local
+    include:
+      - secret
+      - oauth2
