@@ -62,8 +62,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/account/**").permitAll()
                         .requestMatchers("/login/oauth2/code/**").permitAll()
-                        .anyRequest().authenticated());
-//                        .anyRequest().permitAll());
+//                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         httpSecurity
                 .oauth2Login(oauth2 -> { oauth2

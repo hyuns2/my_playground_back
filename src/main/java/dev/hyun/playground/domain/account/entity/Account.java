@@ -38,9 +38,6 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(unique = true)
-    private String socialId;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 

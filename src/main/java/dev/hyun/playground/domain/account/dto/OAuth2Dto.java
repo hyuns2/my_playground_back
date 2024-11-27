@@ -64,7 +64,6 @@ public class OAuth2Dto {
                     .role(Role.ROLE_USER)
                     .isActive(true)
                     .socialType(socialType)
-                    .socialId(socialType.name() + "_" + id)
                     .user(user).build();
         }
     }

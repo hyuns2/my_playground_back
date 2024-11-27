@@ -42,7 +42,6 @@ public class AccountDto {
                     .role(role)
                     .isActive(true)
                     .socialType(SocialType.OURS)
-                    .socialId(SocialType.OURS.name() + "_" + UUID.randomUUID())
                     .user(User.builder()
                             .name(name).build())
                     .build();

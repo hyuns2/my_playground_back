@@ -53,7 +53,7 @@ public class OAuth2AccountService extends DefaultOAuth2UserService {
     }
 
     private Account getAccount(OAuth2Dto.OAuth2UserInfoDto dto) {
-        Optional<Account> account = accountRepository.findBySocialId(dto.getId());
+        Optional<Account> account = accountRepository.findByEmail(dto.getEmail());
         return account.isEmpty() ? saveAccount(dto) : account.get();
     }
 
