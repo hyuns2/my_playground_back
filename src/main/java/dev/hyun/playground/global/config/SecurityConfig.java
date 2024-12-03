@@ -58,7 +58,7 @@ public class SecurityConfig {
 
         httpSecurity
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                        .requestMatchers("/index.html").permitAll()
+                        .requestMatchers("/socialLogin.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/account/**").permitAll()
                         .requestMatchers("/login/oauth2/code/**").permitAll()
