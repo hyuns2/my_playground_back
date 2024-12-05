@@ -28,15 +28,15 @@ public class KafkaConfig {
     private String producerServer;
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ChattingDto.ChatRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ChattingDto.ChatRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, ChattingDto.ChatMessageRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChattingDto.ChatMessageRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, ChattingDto.ChatRequest> consumerFactory() {
-        JsonDeserializer<ChattingDto.ChatRequest> deserializer = new JsonDeserializer<>();
+    public ConsumerFactory<String, ChattingDto.ChatMessageRequest> consumerFactory() {
+        JsonDeserializer<ChattingDto.ChatMessageRequest> deserializer = new JsonDeserializer<>();
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> consumerConfigurations = new HashMap<>();
@@ -50,7 +50,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, ChattingDto.ChatRequest> producerFactory() {
+    public ProducerFactory<String, ChattingDto.ChatMessageRequest> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 
@@ -65,7 +65,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ChattingDto.ChatRequest> kafkaTemplate() {
+    public KafkaTemplate<String, ChattingDto.ChatMessageRequest> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

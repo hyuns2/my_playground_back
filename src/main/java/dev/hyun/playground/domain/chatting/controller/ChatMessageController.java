@@ -13,13 +13,13 @@ public class ChatMessageController {
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat-message")
-    public void sendMessage(ChattingDto.ChatRequest chatRequest) {
-        chatMessageService.sendMessage(chatRequest);
+    public void sendMessage(ChattingDto.ChatMessageRequest chatMessageRequest) {
+        chatMessageService.sendMessage(chatMessageRequest);
     }
 
     @KafkaListener(topics = "chatting")
-    public void receiveMessage(ChattingDto.ChatRequest chatRequest) {
-        chatMessageService.receiveMessage(chatRequest);
+    public void receiveMessage(ChattingDto.ChatMessageRequest chatMessageRequest) {
+        chatMessageService.receiveMessage(chatMessageRequest);
     }
 
 //    {"chatRoomId": 1, "senderId": 1, "senderName": "창1", "messageType": "TALK", "content": "hello"}

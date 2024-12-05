@@ -1,5 +1,9 @@
 package dev.hyun.playground.domain.notification.service;
 
+import dev.hyun.playground.domain.notification.repository.SseEmitterRepository;
+import dev.hyun.playground.global.error.CustomErrorCode;
+import dev.hyun.playground.global.error.CustomException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -8,8 +12,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
-    public static Map<Long, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
+    private final SseEmitterRepository sseEmitterRepository;
 
     public SseEmitter subscribe(Long userId) {
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
@@ -17,28 +22,28 @@ public class NotificationService {
         try {
             sseEmitter.send(SseEmitter.event().name("connect"));
         } catch (IOException e) {
-            throw new IllegalStateException("알림 연결 실패");
+            throw new CustomException(CustomErrorCode.FAILED_SSE_CONNECTION);
         }
 
-        sseEmitterMap.put(userId, sseEmitter);
+        sseEmitterRepository.save(userId, sseEmitter);
 
-        sseEmitter.onCompletion(() -> sseEmitterMap.remove(userId));
-        sseEmitter.onTimeout(() -> sseEmitterMap.remove(userId));
-        sseEmitter.onError((e) -> sseEmitterMap.remove(userId));
+        sseEmitter.onCompletion(() -> sseEmitterRepository.deleteByUserId(userId));
+        sseEmitter.onTimeout(() -> sseEmitterRepository.deleteByUserId(userId));
+        sseEmitter.onError((e) -> sseEmitterRepository.deleteByUserId(userId));
 
         return sseEmitter;
     }
 
     public void send(Long userId, String content) {
-        if (sseEmitterMap.containsKey(userId)) {
-            SseEmitter sseEmitter = sseEmitterMap.get(userId);
-            try {
-                sseEmitter.send(SseEmitter.event()
-                        .name("notification")
-                        .data(content));
-            } catch (Exception e) {
-                throw new IllegalStateException("알림 전송 실패");
-            }
+        SseEmitter sseEmitter = sseEmitterRepository.findByUserId(userId);
+        if (sseEmitter == null)
+            return;
+        try {
+            sseEmitter.send(SseEmitter.event()
+                    .name("notification")
+                    .data(content));
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorCode.FAILED_SSE_TRANSMISSION);
         }
     }
 }

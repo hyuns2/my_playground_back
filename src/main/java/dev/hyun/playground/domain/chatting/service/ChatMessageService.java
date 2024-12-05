@@ -1,40 +1,43 @@
 package dev.hyun.playground.domain.chatting.service;
 
 import dev.hyun.playground.domain.chatting.dto.ChattingDto;
-import dev.hyun.playground.domain.chatting.entity.ChatMessage;
-import dev.hyun.playground.domain.chatting.repository.ChatMessageRepository;
-import dev.hyun.playground.domain.notification.service.NotificationService;
+import dev.hyun.playground.domain.chatting.mongo.entity.ChatMessage;
+import dev.hyun.playground.domain.chatting.mongo.repository.ChatMessageRepository;
+import dev.hyun.playground.global.error.CustomErrorCode;
+import dev.hyun.playground.global.error.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
     private final SimpMessageSendingOperations messageSendingOperations;
     private final ChatMessageRepository chatMessageRepository;
-    private final KafkaTemplate<String, ChattingDto.ChatRequest> kafkaTemplate;
-    private final NotificationService notificationService;
+    private final KafkaTemplate<String, ChattingDto.ChatMessageRequest> kafkaTemplate;
+    private final ChatRoomService chatRoomService;
     private static final String KAFKA_TOPIC = "chatting";
 
-    public void sendMessage(ChattingDto.ChatRequest chatRequest) {
-        kafkaTemplate.send(KAFKA_TOPIC, chatRequest);
+    public void sendMessage(ChattingDto.ChatMessageRequest dto) {
+        if (chatRoomService.authorizeToAccess(dto.getChatRoomId(), dto.getSenderId()))
+            kafkaTemplate.send(KAFKA_TOPIC, dto);
+        else
+            throw new CustomException(CustomErrorCode.FORBIDDEN_CHATROOM);
     }
 
-    @Transactional
-    public void receiveMessage(ChattingDto.ChatRequest chatRequest) {
-        ChatMessage chatMessage = toChatMessage(chatRequest);
-        messageSendingOperations.convertAndSend("/sub/chat-room/" + chatRequest.getChatRoomId(), chatMessage);
+    public void receiveMessage(ChattingDto.ChatMessageRequest dto) {
+        ChatMessage chatMessage = toChatMessage(dto);
+        messageSendingOperations.convertAndSend("/sub/chat-room/" + dto.getChatRoomId(), chatMessage);
+        chatRoomService.notifyChatMessage(dto.getChatRoomId(), dto.getSenderId());
         chatMessageRepository.save(chatMessage);
     }
 
-    private ChatMessage toChatMessage(ChattingDto.ChatRequest chatRequest) {
-        ChatMessage chatMessage = ChatMessage.of(chatRequest.getChatRoomId(), chatRequest.getSenderId(), chatRequest.getSenderName(), chatRequest.getMessageType(), chatRequest.getContent());
-        if (chatMessage.getMessageType().equals(ChattingDto.MessageType.ENTER.name()))
+    private ChatMessage toChatMessage(ChattingDto.ChatMessageRequest dto) {
+        ChatMessage chatMessage = ChattingDto.ChatMessageRequest.toEntity(dto);
+        if (chatMessage.getMessageType().equals(ChattingDto.ChatMessageRequest.MessageType.ENTER.name()))
             chatMessage.setContent(chatMessage.getSenderName() + "님이 입장하셨습니다!");
-        else if (chatMessage.getMessageType().equals(ChattingDto.MessageType.EXIT.name()))
+        else if (chatMessage.getMessageType().equals(ChattingDto.ChatMessageRequest.MessageType.EXIT.name()))
             chatMessage.setContent(chatMessage.getSenderName() + "님이 퇴장하셨습니다!");
 
         return chatMessage;
