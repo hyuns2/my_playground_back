@@ -11,7 +11,7 @@ public enum CustomErrorCode {
     BAD_REQUEST("Origin-400", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("Origin-401", "인증되지 않은 요청입니다.", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("Origin-403", "접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
-    SERVER_ERROR("Origin-500", "알 수 없는 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SERVER_ERROR("Origin-500", "서버에 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // account
     ACCOUNT_NOT_FOUND("Account-001", "해당하는 계정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

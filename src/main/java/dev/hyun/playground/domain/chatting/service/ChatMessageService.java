@@ -3,6 +3,7 @@ package dev.hyun.playground.domain.chatting.service;
 import dev.hyun.playground.domain.chatting.dto.ChattingDto;
 import dev.hyun.playground.domain.chatting.mongo.entity.ChatMessage;
 import dev.hyun.playground.domain.chatting.mongo.repository.ChatMessageRepository;
+import dev.hyun.playground.domain.user.User;
 import dev.hyun.playground.global.error.CustomErrorCode;
 import dev.hyun.playground.global.error.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,10 @@ public class ChatMessageService {
     private final ChatRoomService chatRoomService;
     private static final String KAFKA_TOPIC = "chatting";
 
-    public void sendMessage(ChattingDto.ChatMessageRequest dto) {
+    public void sendMessage(User user, ChattingDto.ChatMessageRequest dto) {
+        if (!user.getId().equals(dto.getSenderId()))
+            throw new CustomException(CustomErrorCode.BAD_REQUEST);
+
         if (chatRoomService.authorizeToAccess(dto.getChatRoomId(), dto.getSenderId()))
             kafkaTemplate.send(KAFKA_TOPIC, dto);
         else
