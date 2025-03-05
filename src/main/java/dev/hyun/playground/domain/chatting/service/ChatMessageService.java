@@ -22,7 +22,7 @@ public class ChatMessageService {
 
     public void sendMessage(User user, ChattingDto.ChatMessageRequest dto) {
         if (!user.getId().equals(dto.getSenderId()))
-            throw new CustomException(CustomErrorCode.BAD_REQUEST);
+            throw new CustomException(CustomErrorCode.SENDER_NOT_MATCHED);
 
         if (chatRoomService.authorizeToAccess(dto.getChatRoomId(), dto.getSenderId()))
             kafkaTemplate.send(KAFKA_TOPIC, dto);

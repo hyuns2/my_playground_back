@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum CustomErrorCode {
     // origin
-    BAD_REQUEST("Origin-400", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("Origin-401", "인증되지 않은 요청입니다.", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("Origin-403", "접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
     SERVER_ERROR("Origin-500", "서버에 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -24,12 +23,12 @@ public enum CustomErrorCode {
 
     // chatting
     CHATROOM_NOT_FOUND("Chatting-001", "해당하는 채팅방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    FORBIDDEN_CHATROOM("Origin-403", "해당 채팅방의 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    SENDER_NOT_MATCHED("Chatting-002", "현재 유저와 채팅 발신자가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    FORBIDDEN_CHATROOM("Chatting-003", "해당 채팅방의 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
     // notification
     FAILED_SSE_CONNECTION("Notification-001", "알림 연결을 실패했습니다.", HttpStatus.BAD_REQUEST),
     FAILED_SSE_TRANSMISSION("Notification-002", "알림 전송을 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-
 
     private final String code;
     private final String message;
