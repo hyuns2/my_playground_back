@@ -20,7 +20,7 @@ public class NotificationService {
         try {
             sseEmitter.send(SseEmitter.event().name("connect"));
         } catch (IOException e) {
-            throw new CustomException(CustomErrorCode.FAILED_SSE_CONNECTION);
+            throw new CustomException(CustomErrorCode.SSE_CONNECTION_FAIL);
         }
 
         sseEmitterRepository.save(userId, sseEmitter);
@@ -41,7 +41,7 @@ public class NotificationService {
                     .name("notification")
                     .data(content));
         } catch (Exception e) {
-            throw new CustomException(CustomErrorCode.FAILED_SSE_TRANSMISSION);
+            throw new CustomException(CustomErrorCode.SSE_TRANSMISSION_FAIL);
         }
     }
 }

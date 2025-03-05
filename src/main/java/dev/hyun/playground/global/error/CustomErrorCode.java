@@ -27,8 +27,8 @@ public enum CustomErrorCode {
     FORBIDDEN_CHATROOM("Chatting-003", "해당 채팅방의 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
     // notification
-    FAILED_SSE_CONNECTION("Notification-001", "알림 연결을 실패했습니다.", HttpStatus.BAD_REQUEST),
-    FAILED_SSE_TRANSMISSION("Notification-002", "알림 전송을 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SSE_CONNECTION_FAIL("Notification-001", "알림 연결을 실패했습니다.", HttpStatus.BAD_REQUEST),
+    SSE_TRANSMISSION_FAIL("Notification-002", "알림 전송을 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // chatAI
     JSON_PROCESSING_FAIL("ChatAI-001", "JSON 맵핑에 문제가 있습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
