@@ -28,7 +28,10 @@ public enum CustomErrorCode {
 
     // notification
     FAILED_SSE_CONNECTION("Notification-001", "알림 연결을 실패했습니다.", HttpStatus.BAD_REQUEST),
-    FAILED_SSE_TRANSMISSION("Notification-002", "알림 전송을 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    FAILED_SSE_TRANSMISSION("Notification-002", "알림 전송을 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // chatAI
+    JSON_PROCESSING_FAIL("ChatAI-001", "JSON 맵핑에 문제가 있습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;
     private final String message;
