@@ -52,7 +52,10 @@ public class ChatAIUtil {
                 .bodyValue(requestValue)
                 .retrieve()
                 .bodyToFlux(ChatAIDto.Response.class)
-                .filter(response -> { return response.getGeneratedText() != null && !response.getGeneratedText().isBlank(); })
+                .filter(response -> { return response.getGeneratedText() != null
+                        && !response.getGeneratedText().isBlank(); })
+                .onErrorResume(e -> { return Flux.just(ChatAIDto.Response.builder()
+                            .generatedText("현재 ChatAI와의 통신에 문제가 있습니다.").build()); })
                 .map(ChatAIDto.Response::getGeneratedText);
     }
 }

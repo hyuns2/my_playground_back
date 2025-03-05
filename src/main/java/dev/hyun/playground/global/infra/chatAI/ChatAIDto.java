@@ -17,6 +17,7 @@ public class ChatAIDto {
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class Response implements Serializable {
         @JsonProperty(value = "generated_text")
         private String generatedText;
