@@ -2,10 +2,7 @@ package dev.hyun.playground.domain.account.entity;
 
 import dev.hyun.playground.domain.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,8 +11,8 @@ import java.util.Collection;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Account implements UserDetails {
     @Id

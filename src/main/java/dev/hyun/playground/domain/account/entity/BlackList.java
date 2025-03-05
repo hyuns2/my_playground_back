@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash
+@RedisHash(value = "black_list")
 @Getter
 @Builder
 public class BlackList {
